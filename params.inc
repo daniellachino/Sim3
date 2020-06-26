@@ -7,7 +7,8 @@
     SW      = 10'b0100011_010,
     ALU     = 10'b0110011_xxx,
     BEQ     = 10'b1100011_000,
-    JAL     = 10'b1101111_xxx;
+    JAL     = 10'b1101111_xxx,
+    I_ALU   = 10'b0000010_011;
 
  // PC selector
  localparam
@@ -24,12 +25,14 @@
  // ALU_A
  localparam
     ALUA_PCC = 1'b0,
-    ALUA_REG = 1'b1;
+    ALUA_REG = 1'b1,
+    ALUA_FORMER = 2'b10;
 
  // ALU_B
  localparam
     ALUB_IMM = 1'b0,
-    ALUB_REG = 1'b1;
+    ALUB_REG = 1'b1,
+    ALUB_CONST = 2'b10;
 
  // ALU operations
  localparam

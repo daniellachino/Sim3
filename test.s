@@ -1,6 +1,9 @@
 .text
 main:   # Put your code here
         add		t6, x0, x0
+        lw              t6, 8(x0)
+        addi            t6,t6,12
+        sw              t6,16(x0)
         beq		t6, x0, finish
 
 deadend: beq	t6, x0, deadend        
@@ -12,3 +15,4 @@ finish:
         beq		t6, x0, deadend
 
 
+*

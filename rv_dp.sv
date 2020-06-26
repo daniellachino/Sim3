@@ -28,10 +28,11 @@
      input logic [1:0] wbsel,
      input logic regwen,
      input logic [1:0] immsel,
-     input logic asel,
-     input logic bsel,
+     input logic [1:0] asel,
+     input logic [1:0] bsel,
      input logic [3:0] alusel,
      input logic mdrwrite,
+
      
      // Clock and reset
      input logic clk,
@@ -125,11 +126,29 @@
 
  // ALU input A
  logic [DPWIDTH-1:0] alu_a;
- assign alu_a = (asel == ALUA_REG) ? a : pcc;
+ logic [DPWIDTH-1:0] alu_result;
+
+ always_comb
+ begin
+     case(asel)
+        ALUA_PCC: alu_a = pcc;
+        ALUA_REG: alu_a = a;
+        ALUA_FORMER: alu_a = alu_result;
+        default:  alu_a = a;
+     endcase
+ end
 
  // ALU input A
  logic [DPWIDTH-1:0] alu_b;
- assign alu_b = (bsel == ALUB_REG) ? b : imm;
+ always_comb
+ begin
+     case(bsel)
+        ALUB_REG: alu_b = b;
+        ALUB_IMM: alu_b = imm;
+        ALUB_CONST: alu_b = 0'hFFFFFFFF;
+        default:  alu_b = b;
+     endcase
+ end
 
  // For signed comparison, cast to integer. logic is by default unsigned
  integer alu_as;
@@ -138,7 +157,6 @@
  always_comb alu_bs = alu_b;
 
  // The ALU
- logic [DPWIDTH-1:0] alu_result;
  always_comb
      case (alusel)
          ALU_ADD: alu_result = alu_a + alu_b;
